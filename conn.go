@@ -12,10 +12,10 @@ import (
 	"io"
 	"math"
 
-	"github.com/johnnadratowski/golang-neo4j-bolt-driver/encoding"
-	"github.com/johnnadratowski/golang-neo4j-bolt-driver/errors"
-	"github.com/johnnadratowski/golang-neo4j-bolt-driver/log"
-	"github.com/johnnadratowski/golang-neo4j-bolt-driver/structures/messages"
+	"github.com/yolii/golang-neo4j-bolt-driver/encoding"
+	"github.com/yolii/golang-neo4j-bolt-driver/errors"
+	"github.com/yolii/golang-neo4j-bolt-driver/log"
+	"github.com/yolii/golang-neo4j-bolt-driver/structures/messages"
 )
 
 // Conn represents a connection to Neo4J

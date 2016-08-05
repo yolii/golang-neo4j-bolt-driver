@@ -5,9 +5,9 @@ import (
 	"encoding/binary"
 	"io"
 
-	"github.com/johnnadratowski/golang-neo4j-bolt-driver/errors"
-	"github.com/johnnadratowski/golang-neo4j-bolt-driver/structures/graph"
-	"github.com/johnnadratowski/golang-neo4j-bolt-driver/structures/messages"
+	"github.com/yolii/golang-neo4j-bolt-driver/errors"
+	"github.com/yolii/golang-neo4j-bolt-driver/structures/graph"
+	"github.com/yolii/golang-neo4j-bolt-driver/structures/messages"
 	"database/sql/driver"
 )
 
