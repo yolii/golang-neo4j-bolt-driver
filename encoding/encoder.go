@@ -9,6 +9,8 @@ import (
 
 	"github.com/johnnadratowski/golang-neo4j-bolt-driver/errors"
 	"github.com/johnnadratowski/golang-neo4j-bolt-driver/structures"
+	"reflect"
+	"fmt"
 )
 
 const (
@@ -169,6 +171,7 @@ func (e Encoder) encode(iVal interface{}) error {
 	//if reflect.TypeOf(iVal) == reflect.Ptr {
 	//	return Encode(*iVal)
 	//}
+	iVal = convertToBaseType(iVal)
 
 	var err error
 	switch val := iVal.(type) {
@@ -210,14 +213,85 @@ func (e Encoder) encode(iVal interface{}) error {
 	case []interface{}:
 		err = e.encodeSlice(val)
 	case map[string]interface{}:
+
 		err = e.encodeMap(val)
+
 	case structures.Structure:
 		err = e.encodeStructure(val)
 	default:
-		return errors.New("Unrecognized type when encoding data for Bolt transport: %T %+v", val, val)
+		s := reflect.ValueOf(val)
+		if s.Kind() == reflect.Slice {
+			new := make([]interface{}, s.Len())
+			for i:=0; i < s.Len(); i++ {
+				new[i] = s.Index(i).Interface()
+			}
+			fmt.Printf("=======:%T, %+v \n", iVal, iVal)
+			err = e.encodeSlice(new)
+		} else {
+			return errors.New("Unrecognized type when encoding data for Bolt transport: %T %+v", val, val)
+		}
 	}
 
 	return err
+}
+
+func convertToBaseType(val interface{}) interface{}  {
+	if (val != nil) {
+		ref := reflect.ValueOf(val)
+		switch ref.Kind() {
+		case reflect.Bool:
+			return  bool(ref.Bool())
+		case reflect.Int:
+			return int(ref.Int())
+		case reflect.Int8:
+			return int8(ref.Int())
+		case reflect.Int16:
+			return int16(ref.Int())
+		case reflect.Int32:
+			return int32(ref.Int())
+		case reflect.Int64:
+			return int64(ref.Int())
+		case reflect.Uint:
+			return uint(ref.Uint())
+		case reflect.Uint8:
+			return uint8(ref.Uint())
+		case reflect.Uint16:
+			return uint16(ref.Uint())
+		case reflect.Uint32:
+			return uint32(ref.Uint())
+		case reflect.Uint64:
+			return uint64(ref.Uint())
+		case reflect.Uintptr:
+			return uintptr(ref.Pointer())
+		case reflect.Float32:
+			return float32(ref.Float())
+		case reflect.Float64:
+			return float64(ref.Float())
+		case reflect.Complex64:
+			return complex64(ref.Complex())
+		case reflect.Complex128:
+			return complex128(ref.Complex())
+		case reflect.String:
+			return string(ref.String())
+		case reflect.Array:
+		case reflect.Chan:
+		case reflect.Func:
+		case reflect.Interface:
+		case reflect.Map:
+		case reflect.Ptr:
+		case reflect.Slice:
+			new := make([]interface{}, ref.Len())
+			for i:=0; i < ref.Len(); i++ {
+				new[i] = ref.Index(i).Interface()
+			}
+			return new
+		case reflect.Struct:
+		case reflect.UnsafePointer:
+		default:
+			return val
+		}
+	}
+	return val
 }
 
 // encodeNil encodes a nil object to the stream

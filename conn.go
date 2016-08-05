@@ -685,7 +685,8 @@ func (c *boltConn) queryNeo(query string, params map[string]interface{}) (*boltR
 	// Pipeline the run + pull all for this
 	successResp, err := c.sendRunPullAllConsumeRun(c.statement.query, params)
 	if err != nil {
-		return nil, err
+		//return nil, err
+		return nil, driver.ErrBadConn
 	}
 	success, ok := successResp.(messages.SuccessMessage)
 	if !ok {

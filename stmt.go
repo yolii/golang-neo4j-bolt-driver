@@ -195,6 +195,7 @@ func (s *boltStmt) queryNeo(params map[string]interface{}) (*boltRows, error) {
 	respInt, err := s.conn.sendRunConsume(s.query, params)
 	if err != nil {
 		return nil, err
+		//return nil, driver.ErrBadConn
 	}
 
 	resp, ok := respInt.(messages.SuccessMessage)

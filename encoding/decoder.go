@@ -8,6 +8,7 @@ import (
 	"github.com/johnnadratowski/golang-neo4j-bolt-driver/errors"
 	"github.com/johnnadratowski/golang-neo4j-bolt-driver/structures/graph"
 	"github.com/johnnadratowski/golang-neo4j-bolt-driver/structures/messages"
+	"database/sql/driver"
 )
 
 // Decoder decodes a message from the bolt protocol stream
@@ -48,6 +49,7 @@ func (d Decoder) read() (*bytes.Buffer, error) {
 		lengthBytes := make([]byte, 2)
 		if numRead, err := d.r.Read(lengthBytes); numRead != 2 {
 			return nil, errors.Wrap(err, "Couldn't read expected bytes for message length. Read: %d Expected: 2.", numRead)
+			return nil, driver.ErrBadConn
 		}
 
 		// Chunk header contains length of current message
